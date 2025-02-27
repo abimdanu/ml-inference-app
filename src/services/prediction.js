@@ -38,17 +38,21 @@ async function predictionService(req) {
     const imagePath = req.file.path;
     const image = await readImageFile(imagePath);
 
-    console.log('Before loading model:', tf.memory()); // 🔍 Check memory before loading model
+    // 🔍 Check memory BEFORE loading model
+    // console.log('Before loading model:', tf.memory());
 
     // Load model inside function scope to ensure it is disposed later
     const modelPathOrUrl = `file://${path.join(__dirname, '../..', 'model', 'model.json')}`;
     console.log('Loading model...');
     let model = await tf.loadLayersModel(modelPathOrUrl);
     console.log('Model loaded.');
-    console.log('After loading model:', tf.memory()); // 🔍 Check memory after loading model
+
+    // 🔍 Check memory AFTER loading model
+    // console.log('After loading model:', tf.memory());
 
     const predictionData = tf.tidy(() => {
-      console.log('Before inference:', tf.memory());
+      // 🔍 Check memory BEFORE inference
+      // console.log('Before inference:', tf.memory());
 
       // Decode and preprocess image
       const tensor = tf.node
@@ -74,7 +78,8 @@ async function predictionService(req) {
       const classes = ['BrownSpot', 'Healthy', 'Hispa', 'LeafBlast'];
       const disease = classes[classResult];
 
-      console.log('After inference:', tf.memory());
+      // 🔍 Check memory AFTER inference
+      // console.log('After inference:', tf.memory());
 
       return { disease, confidenceScore: Math.max(...scores) * 100 };
     });
@@ -84,7 +89,9 @@ async function predictionService(req) {
     // Dispose the model to free memory
     tf.dispose(model);
     model = null;
-    console.log('After disposing model:', tf.memory());
+
+    // 🔍 Check memory AFTER model disposal
+    // console.log('After disposing model:', tf.memory());
 
     return predictionData;
   } catch (error) {
