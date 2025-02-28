@@ -8,6 +8,7 @@
     "start": "node ./src/index.js",
     "start:dev": "nodemon ./src/index.js",
     "start:inspect": "node --inspect ./src/index.js",
+    "start:gc": "node --expose-gc ./src/index.js",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix"
   },

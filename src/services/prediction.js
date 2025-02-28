@@ -41,11 +41,16 @@ async function predictionService(req) {
     // 🔍 Check memory BEFORE loading model
     // console.log('Before loading model:', tf.memory());
 
-    // Load model inside function scope to ensure it is disposed later
-    const modelPathOrUrl = `file://${path.join(__dirname, '../..', 'model', 'model.json')}`;
-    console.log('Loading model...');
-    let model = await tf.loadLayersModel(modelPathOrUrl);
-    console.log('Model loaded.');
+    // // Load model inside function scope to ensure it is disposed later
+    // const modelPathOrUrl = `file://${path.join(__dirname, '../..', 'model', 'model.json')}`;
+    // console.log('Loading model...');
+    // let model = await tf.loadLayersModel(modelPathOrUrl);
+    // console.log('Model loaded.');
+
+    const model = req.app.locals.model;
+    if (!model) {
+      throw new Error('Model not loaded yet!');
+    }
 
     // 🔍 Check memory AFTER loading model
     // console.log('After loading model:', tf.memory());
@@ -70,9 +75,10 @@ async function predictionService(req) {
       const classResult = classIndexTensor.dataSync()[0];
 
       // Dispose intermediate tensors
-      tensor.dispose();
-      prediction.dispose();
-      classIndexTensor.dispose();
+      // tensor.dispose();
+      // prediction.dispose();
+      // classIndexTensor.dispose();
+      // tf.disposeVariables();
 
       // Map class index to disease name
       const classes = ['BrownSpot', 'Healthy', 'Hispa', 'LeafBlast'];
@@ -87,8 +93,8 @@ async function predictionService(req) {
     await deleteImageFile(imagePath);
 
     // Dispose the model to free memory
-    tf.dispose(model);
-    model = null;
+    // tf.dispose(model);
+    // delete model;
 
     // 🔍 Check memory AFTER model disposal
     // console.log('After disposing model:', tf.memory());
