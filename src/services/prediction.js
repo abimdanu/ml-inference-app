@@ -75,9 +75,9 @@ async function predictionService(req) {
       const classResult = classIndexTensor.dataSync()[0];
 
       // Dispose intermediate tensors
-      // tensor.dispose();
-      // prediction.dispose();
-      // classIndexTensor.dispose();
+      tensor.dispose();
+      prediction.dispose();
+      classIndexTensor.dispose();
       // tf.disposeVariables();
 
       // Map class index to disease name
