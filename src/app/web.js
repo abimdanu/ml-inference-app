@@ -48,7 +48,7 @@ loadModel();
 
 app.use(router);
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 [Worker ${process.pid}] Server is running on http://localhost:${PORT}`);
 });
